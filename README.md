@@ -1,5 +1,6 @@
 # aws-docker-swarm
 Using terraform to create a cluster including 3 instances as 3 nodes
+![image](https://github.com/TunKeyy/aws-docker-swarm/assets/115680634/ed3d05cc-7a32-41fe-8d86-4c5e9989cd1c)
 
 
 # Terraform
