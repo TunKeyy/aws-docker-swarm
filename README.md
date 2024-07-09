@@ -120,3 +120,14 @@ Create an attachable network - network for isolated containers to connect, these
 ```
 docker network create -d overlay --attachment mynetwork2
 ```
+
+# Volumes
+
+There are 2 types of volumes:
+    - Local Volume: Use in local disk scope and cannot be accessed from other server
+    - Network Volume: Shared volume between services, using a certain service to store file, data, ...
+
+Some types of network volume:
+    - NFS
+    - SAMBA(SMB)
+    - SSH
