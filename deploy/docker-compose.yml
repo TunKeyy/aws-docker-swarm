@@ -1,12 +1,31 @@
 version: "3.7"
 
 services:
+  samba:
+    image: khanguyentuan/samba
+    ports:
+      - 139:139
+      - 145:145
+    environment:
+      - smbuser: smbuser
+      - password: 1234567
+    volumes:
+      - /home/data/:/data/ # anh xa /home/data vao thu muc data cua service samba
+    deploy:
+      replicas: 3
+      placement:
+        constaints:
+          - node.role=manager
+
   service1:
     image: khanguyentuan/swarmtest:node
     networks:
       - net1
     ports:
       - 8085:8085
+    volumes:
+      - vol1:/d1/
+      - vol2:/d2/
     deploy:
       replicas: 5
       resources:
@@ -25,6 +44,9 @@ services:
       - net2
     ports:
       - 8086:8085
+    volumes:
+      - vol1:/d1/ 
+      - vol2:/d2/ # anh xa vol2 vao d2 cua cac container
     deploy:
       replicas: 5
       resources:
@@ -42,3 +64,20 @@ networks:
   net2:
     driver: overlay
     name: www-net2
+
+volumes:
+  vol1: # local volume
+    driver: local
+    name: v1
+    driver_opts:
+      type: none
+      divice: "/home/"
+      o: bind
+
+  vol2: 
+    driver: local
+    name: v2
+    driver_opts:
+      type: cifs
+      device: //IP/data/
+      o: "username=smbuser,password=1234567,file_mode=0777,dir_mode=0777"
