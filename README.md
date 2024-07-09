@@ -5,6 +5,13 @@ Using terraform to create a cluster including 3 instances as 3 nodes
 
 # Terraform
 
+Set env for terraform authentication
+On Ubuntu:
+```
+export AWS_ACCESS_KEY_ID="your-access-key-id"
+export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+```
+
 Create VPC (Virtual Private Cloud) for 2 machines
 Create Subnet, Security Group
 
