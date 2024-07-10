@@ -1,1 +1,5 @@
 /node/node_modules
+*.csv
+.terraform.lock.hcl
+.terraform
+*.pem
