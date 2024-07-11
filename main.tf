@@ -140,7 +140,7 @@ resource "aws_instance" "swarm_nodes" {
   subnet_id = aws_subnet.default_subnet.id
   security_groups = [aws_security_group.instance.id]
   associate_public_ip_address = true
-  key_name = "docker-swarm-ubuntu"
+  key_name = "test-docker-swarm-1"
 
   tags = {
     Name = "swarm-node-${count.index + 1}"

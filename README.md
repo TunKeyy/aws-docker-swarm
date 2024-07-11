@@ -88,6 +88,10 @@ docker service update --image=khanguyentuan/swarmtest:php
 
 
 # Docker Stack
+Copy docker compose configuration from local to remote
+```
+scp -i "key.pem" /directory/docker-compose.yml ubuntu@<ec2-ip>:/home/ubuntu
+```
 Create stack running services in Docker Compose
 
 Using stack to apply services defined in docker-compose file

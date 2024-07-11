@@ -7,14 +7,14 @@ services:
       - 139:139
       - 145:145
     environment:
-      - smbuser: smbuser
-      - password: 1234567
+      smbuser: smbuser
+      password: 1234567
     volumes:
       - /home/data/:/data/ # anh xa /home/data vao thu muc data cua service samba
     deploy:
       replicas: 3
       placement:
-        constaints:
+        constraints:
           - node.role=manager
 
   service1:
@@ -71,7 +71,7 @@ volumes:
     name: v1
     driver_opts:
       type: none
-      divice: "/home/"
+      device: "/home/"
       o: bind
 
   vol2: 
@@ -79,5 +79,5 @@ volumes:
     name: v2
     driver_opts:
       type: cifs
-      device: //IP/data/
+      device: //54.255.208.228/data/
       o: "username=smbuser,password=1234567,file_mode=0777,dir_mode=0777"
