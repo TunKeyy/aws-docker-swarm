@@ -5,27 +5,28 @@ services:
     image: khanguyentuan/samba
     ports:
       - 139:139
-      - 145:145
+      - 445:445
     environment:
       smbuser: smbuser
       password: 1234567
     volumes:
-      - /home/data/:/data/ # anh xa /home/data vao thu muc data cua service samba
+      - /home/data:/data # make sure to have /home/data folder in all of nodes
     deploy:
       replicas: 3
       placement:
         constraints:
-          - node.role=manager
+          - node.role==manager
 
   service1:
+    depends_on:
+      - samba
     image: khanguyentuan/swarmtest:node
     networks:
       - net1
     ports:
       - 8085:8085
     volumes:
-      - vol1:/d1/
-      - vol2:/d2/
+      - vol2:/d2
     deploy:
       replicas: 5
       resources:
@@ -39,14 +40,16 @@ services:
         condition: on-failure
 
   service2:
+    depends_on:
+      - samba
     image: khanguyentuan/swarmtest:php
     networks:
       - net2
     ports:
       - 8086:8085
     volumes:
-      - vol1:/d1/ 
-      - vol2:/d2/ # anh xa vol2 vao d2 cua cac container
+      - vol1:/d1/
+      - vol2:/d2/
     deploy:
       replicas: 5
       resources:
@@ -79,5 +82,5 @@ volumes:
     name: v2
     driver_opts:
       type: cifs
-      device: //54.255.208.228/data/
-      o: "username=smbuser,password=1234567,file_mode=0777,dir_mode=0777"
+      device: //13.229.95.53/data/
+      o: username=smbuser,password=1234567,file_mode=0777,dir_mode=0777,vers=3.0,sec=ntlmssp

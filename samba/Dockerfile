@@ -15,6 +15,7 @@ ADD ./smb.conf /etc/samba/smb.conf
 VOLUME [ "/data" ]
 
 WORKDIR /data/
+RUN groupadd -r smbgroup && useradd -r -g smbgroup smbuser
 
 EXPOSE 139
 EXPOSE 445
