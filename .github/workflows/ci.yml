@@ -55,6 +55,7 @@ jobs:
           echo "$JOIN_IP"
           echo "$SWARM_IP"
           echo "sudo docker swarm join --token $JOIN_TOKEN $SWARM_IP:2377"
+          JOIN_TOKEN=$(echo "$JOIN_TOKEN" | tr -d '\n')
           ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP "sudo apt-get update \
             && sudo apt-get install docker.io -y \
             && sudo systemctl start docker \
