@@ -35,6 +35,7 @@ jobs:
           docker push $REGISTRY/$NGINX_SERVICE
           
   apply-terraform:
+    needs: build-image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
