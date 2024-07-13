@@ -50,7 +50,7 @@ jobs:
           IFS=',' read -ra ADDR <<< "$IPS"
           SWARM_IP=${ADDR[0]}
           JOIN_IP=${ADDR[1]}
-          JOIN_TOKEN="${{ needs.init_swarm.outputs.join_token }}"
+          JOIN_TOKEN=${{ needs.init_swarm.outputs.join_token }}
           echo "$JOIN_TOKEN"
           echo "$JOIN_IP"
           echo "$SWARM_IP"
