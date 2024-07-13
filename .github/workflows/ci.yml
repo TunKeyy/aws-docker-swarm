@@ -33,6 +33,7 @@ jobs:
           JOIN_TOKEN=$(ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP "sudo docker swarm join-token -q worker")
           echo "join_token=$JOIN_TOKEN" >> "$GITHUB_OUTPUT"
           echo "swarm_ip=$SWARM_IP" >> "$GITHUB_OUTPUT"
+          echo "Done"
 
   join-swarm:
     needs: init_swarm
@@ -50,6 +51,8 @@ jobs:
           SWARM_IP=${ADDR[0]}
           JOIN_IP=${ADDR[1]}
           JOIN_TOKEN="${{ needs.init_swarm.outputs.join_token }}"
+          echo "$JOIN_TOKEN"
+          echo "$JOIN_IP"
           ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP "sudo apt-get update \
             && sudo apt-get install docker.io -y \
             && sudo systemctl start docker \
