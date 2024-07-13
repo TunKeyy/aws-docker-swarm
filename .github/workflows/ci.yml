@@ -58,5 +58,5 @@ jobs:
           ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP "sudo apt-get update \
             && sudo apt-get install docker.io -y \
             && sudo systemctl start docker \
-            && sudo systemctl enable docker \
-            && sudo docker swarm join --token $JOIN_TOKEN $SWARM_IP:2377"
+            && sudo systemctl enable docker"
+          ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP "sudo docker swarm join --token $JOIN_TOKEN $SWARM_IP:2377"
