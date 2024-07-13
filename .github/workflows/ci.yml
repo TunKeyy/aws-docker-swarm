@@ -69,5 +69,7 @@ jobs:
             && sudo apt-get install docker.io -y \
             && sudo systemctl start docker \
             && sudo systemctl enable docker \
+            && echo $JOIN_TOKEN \
+            && echo $SWARM_IP \
             && sudo docker swarm join --token $JOIN_TOKEN $SWARM_IP:2377"
       
