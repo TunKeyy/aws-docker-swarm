@@ -14,6 +14,8 @@ jobs:
   apply_terraform:
     # needs: build-image
     runs-on: ubuntu-latest
+    outputs:
+      public_ips: ${{ steps.ids.outputs.public_ips }}
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
@@ -35,17 +37,17 @@ jobs:
         run: |
           aws s3 cp terraform.tfstate s3://kha-app-s3/state/
       - name: Get IPs of instances
+        id: ids
         run: |
           ips=$(terraform output -json | jq -r '.instance_ips.value | join(",")')
-          echo "::set-output name=public_ips::$ips"
-      - name: Add SSH Keys
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
+          echo "public_ips=$ips" >> "$GITHUB_OUTPUT"
+
   init_swarm:
     needs: apply_terraform
     runs-on: ubuntu-latest
+    outputs:
+      join_token: ${{ steps.init_swarm.outputs.join_token}}
+      swarm_ip: ${{ steps.init_swarm.outputs.swarm_ip }}
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
@@ -68,8 +70,9 @@ jobs:
             sudo docker swarm init --advertise-addr=$SWARM_IP
           EOF
           JOIN_TOKEN=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP "sudo docker swarm join-token -q worker")
-          echo "::set-output join_token=$JOIN_TOKEN"
-          echo "::set-output swarm_ip=$SWARM_IP"
+          echo "join_token=$JOIN_TOKEN" >> "$GITHUB_OUTPUT"
+          echo "swarm_ip=$SWARM_IP" >> "$GITHUB_OUTPUT"
+
   join-swarm:
     needs: init_swarm
     runs-on: ubuntu-latest
