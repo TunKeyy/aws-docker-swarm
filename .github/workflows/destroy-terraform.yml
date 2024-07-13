@@ -26,3 +26,6 @@ jobs:
           aws s3 cp s3://kha-app-s3/state/terraform.tfstate .
       - name: Destroy Terraform configuration
         run: terraform destroy -auto-approve
+      - name: Delete Terraform State on S3 bucket
+        run: |
+          aws s3 rm s3://kha-app-s3/state/terraform.tfstate
