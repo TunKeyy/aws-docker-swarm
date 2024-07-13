@@ -54,6 +54,9 @@ jobs:
         run: terraform init
       - name: Apply Terraform
         run: terraform apply -auto-approve
+      - name: Copy Terraform State to S3 Bucket
+        run: |
+          aws s3 cp terraform.tfstate s3://kha-app-s3/state/
       - name: Get IPs of instances
         run: |
           ips=$(terraform output -json | jq -r '.instance_ips.value | join(",")')
