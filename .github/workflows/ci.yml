@@ -5,11 +5,6 @@ on:
     branches:
       - main
 
-env:
-  BE_SERVICE: swarmtest
-  NGINX_SERVICE: nginx
-  SMB_SERVICE: samba
-
 jobs:
   apply_terraform:
     # needs: build-image
@@ -55,21 +50,21 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
       - name: Init Docker Swarm On Instance 1
         id: init_swarm
         run: |
           IPS="${{ needs.apply_terraform.outputs.public_ips }}"
           IFS=',' read -ra ADDR <<< "$IP"
           SWARM_IP=${ADDR[0]}
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP << 'EOF'
+          ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP << 'EOF'
             sudo apt-get update
             sudo apt-get install docker.io -y
             sudo systemctl start docker
             sudo systemctl enable docker
             sudo docker swarm init --advertise-addr=$SWARM_IP
           EOF
-          JOIN_TOKEN=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP "sudo docker swarm join-token -q worker")
+          JOIN_TOKEN=$(ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP "sudo docker swarm join-token -q worker")
           echo "join_token=$JOIN_TOKEN" >> "$GITHUB_OUTPUT"
           echo "swarm_ip=$SWARM_IP" >> "$GITHUB_OUTPUT"
 
@@ -81,7 +76,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
       - name: Instance 2 joins Docker Swarm
         run: |
           IPS="${{ needs.apply_terraform.outputs.public_ips }}"
@@ -89,7 +84,7 @@ jobs:
           SWARM_IP=${ADDR[0]}
           JOIN_IP=${ADDR[1]}
           JOIN_TOKEN="${{ needs.init_swarm.outputs.join_token }}"
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP << EOF
+          ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP << EOF
             sudo apt-get update
             sudo apt-get install docker.io -y
             sudo systemctl start docker
