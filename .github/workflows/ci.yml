@@ -26,12 +26,12 @@ jobs:
           IFS=',' read -ra ADDR <<< "$IPS"
           SWARM_IP=${ADDR[0]}
           ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP << "EOF"
-            set -e
-            sudo apt-get update
-            sudo apt-get install docker.io -y
-            sudo systemctl start docker
-            sudo systemctl enable docker
-            sudo docker swarm init --advertise-addr=$SWARM_IP
+            set -e \
+            && sudo apt-get update \
+            && sudo apt-get install docker.io -y \
+            && sudo systemctl start docker \
+            && sudo systemctl enable docker \
+            && sudo docker swarm init --advertise-addr=$SWARM_IP
           EOF
           JOIN_TOKEN=$(ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP "sudo docker swarm join-token -q worker")
           echo "join_token=$JOIN_TOKEN" >> "$GITHUB_OUTPUT"
