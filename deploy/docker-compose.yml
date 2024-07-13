@@ -22,7 +22,7 @@ services:
       - samba
     image: khanguyentuan/swarmtest:node
     networks:
-      - net1
+      - net2
     ports:
       - 8085:8085
     volumes:
@@ -61,7 +61,25 @@ services:
           memory: 50MB
       restart_policy:
         condition: on-failure
-
+  
+  proxy:
+    depends_on:
+      - service1
+      - service2
+    image: khanguyentuan/nginx
+    ports:
+      - 80:80
+      - 443:443
+    deploy:
+      replicas: 3
+      placement:
+        constraints:
+          - node.role==manager
+      restart_policy:
+        condition: on-failure
+    networks:
+      - net2
+        
 networks:
   net1: # default overlay
   net2:
@@ -82,5 +100,5 @@ volumes:
     name: v2
     driver_opts:
       type: cifs
-      device: //13.229.95.53/data/
+      device: //13.212.35.217/data/
       o: username=smbuser,password=1234567,file_mode=0777,dir_mode=0777,vers=3.0,sec=ntlmssp
