@@ -25,15 +25,14 @@ jobs:
           IPS="47.128.245.11,52.221.211.118"
           IFS=',' read -ra ADDR <<< "$IPS"
           SWARM_IP=${ADDR[0]}
-          JOIN_TOKEN=$(ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP << 'EOF'
-            sudo apt-get update
-            sudo apt-get install -y docker.io
-            sudo systemctl start docker
-            sudo systemctl enable docker
-            sudo docker swarm init --advertise-addr=$SWARM_IP
-            sudo docker swarm join-token -q worker
+          ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP << "EOF"
+            sudo apt-get update \
+            && sudo apt-get install docker.io -y \
+            && sudo systemctl start docker \
+            && sudo systemctl enable docker \
+            && sudo docker swarm init --advertise-addr=$SWARM_IP \
           EOF
-          )
+          JOIN_TOKEN=$(ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP "sudo docker swarm join-token -q worker")
           echo "join_token=$JOIN_TOKEN" >> "$GITHUB_OUTPUT"
           echo "swarm_ip=$SWARM_IP" >> "$GITHUB_OUTPUT"
           echo "Done"
@@ -54,8 +53,6 @@ jobs:
           SWARM_IP=${ADDR[0]}
           JOIN_IP=${ADDR[1]}
           JOIN_TOKEN="${{ needs.init_swarm.outputs.join_token }}"
-          echo $JOIN_TOKEN
-          echo $SWARM_IP
           ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP << "EOF"
             sudo apt-get update \
             && sudo apt-get install docker.io -y \
