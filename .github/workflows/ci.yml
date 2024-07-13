@@ -25,11 +25,11 @@ jobs:
         env:
           REGISTRY: ${{ secrets.DOCKER_USERNAME }}
         run: |-
-          docker build -t $REGISTRY/$BE_SERVICE:node -f Dockerfile ./node
+          docker build -t $REGISTRY/$BE_SERVICE:node -f ./node/Dockerfile ./node
           docker push $REGISTRY/$BE_SERVICE:node
-          docker build -t $REGISTRY/$BE_SERVICE:php -f Dockerfile ./php
+          docker build -t $REGISTRY/$BE_SERVICE:php -f ./php/Dockerfile ./php
           docker push $REGISTRY/$BE_SERVICE:php
-          docker build -t $REGISTRY/$SMB_SERVICE -f Dockerfile ./samba
+          docker build -t $REGISTRY/$SMB_SERVICE -f ./samba/Dockerfile ./samba
           docker push $REGISTRY/$SMB_SERVICE
-          docker build -t $REGISTRY/$NGINX_SERVICE -f Dockerfile ./nginx
+          docker build -t $REGISTRY/$NGINX_SERVICE -f ./nginx/Dockerfile ./nginx
           docker push $REGISTRY/$NGINX_SERVICE
