@@ -9,6 +9,11 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
+      - name: Download Swarm Info From artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: swarm_info
+          path: .
       - name: Read envs from CI
         id: read_swarm_info
         run: |
