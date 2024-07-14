@@ -24,7 +24,7 @@ jobs:
           SWARM_USER="ubuntu"
           echo "swarm_info=$SWARM_IP,$SWARM_USER" >> "$GITHUB_OUTPUT"
           echo "$SWARM_IP,$SWARM_USER" > swarm_info.txt
-          JOIN_TOKEN="SWMTKN-1-5b7g6enha5xudxg4epxkupe5zmm4s9vw6w7lnt33k43wkf83ns-efktnylkeqguuapusih49ig6d"
+          JOIN_TOKEN="SWMTKN-1-01n459y6hy4os9ybvcpy9a1nh42nt7tysu1gdbfogilairza2o-17wwozw643mwly4i6fzyq73ak"
           FORMAT_TOKEN=$(echo $JOIN_TOKEN | tr -d '\n\r')
           ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP "sudo apt-get update \
             && sudo apt-get install docker.io -y \
