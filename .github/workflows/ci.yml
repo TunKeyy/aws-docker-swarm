@@ -39,5 +39,3 @@ jobs:
         with:
           name: swarm_info
           path: swarm_info.txt
-          if-no-files-found: warn
-          overwrite: true
