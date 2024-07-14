@@ -10,7 +10,7 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v3
       - name: Download Swarm Info From artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: swarm_info
       - name: Read envs from CI

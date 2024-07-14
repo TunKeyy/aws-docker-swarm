@@ -35,7 +35,7 @@ jobs:
             && echo $SWARM_IP \
             && sudo docker swarm join --token $FORMAT_TOKEN $SWARM_IP:2377"
       - name: Upload Envs to Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: swarm_info
-          path: swarm_info.txt
+          path: ./swarm_info.txt
