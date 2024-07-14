@@ -32,8 +32,8 @@ jobs:
           echo "SWARM_USER=$SWARM_USER" >> $GITHUB_ENV
       - name: Deploy
         run: |
-          SWARM_IP=${{env.SWARM_IP}}
-          SWARM_USER=${{env.SWARM_USER}}
+          SWARM_IP=54.169.115.66
+          SWARM_USER=ubuntu
           SSH_PRIVATE_KEY="${{secrets.SSH_PRIVATE_KEY}}"
           DEPLOY_FILE=docker-compose.yml
           STACK_NAME=t1
