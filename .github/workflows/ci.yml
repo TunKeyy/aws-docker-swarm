@@ -102,11 +102,14 @@ jobs:
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
       - name: Instance 2 joins Docker Swarm
+        id: join_swarm
         run: |
           IPS="${{ needs.apply_terraform.outputs.public_ips }}"
           IFS=',' read -ra ADDR <<< "$IPS"
           SWARM_IP=${ADDR[0]}
           JOIN_IP=${ADDR[1]}
+          SWARM_USER="ubuntu"
+          echo "swarm_info=$SWARM_IP,$SWARM_USER" >> "$GITHUB_OUTPUT"
           JOIN_TOKEN="${{ needs.init_swarm.outputs.join_token }}"
           FORMAT_TOKEN=$(echo $JOIN_TOKEN | tr -d '\n\r')
           ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$JOIN_IP "sudo apt-get update \
@@ -116,4 +119,8 @@ jobs:
             && echo $FORMAT_TOKEN \
             && echo $SWARM_IP \
             && sudo docker swarm join --token $FORMAT_TOKEN $SWARM_IP:2377"
-      
+      - name: Upload Envs to Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{steps.join_swarm.outputs.swarm_info}}
+          path: ./swarm_ip.txt

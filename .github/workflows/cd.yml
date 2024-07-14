@@ -1,0 +1,22 @@
+name: CD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+      - name: Read envs from CI
+        id: read_swarm_info
+        run: |
+          SWARM_INFO=$(cat ./swarm-info.txt)
+          IFS=',' read -ra ADDR <<< "$SWARM_INFO"
+          SWARM_IP=${ADDR[0]}
+          SWARM_USER=${ADDR[1]}
+          echo "SWARM_IP=$SWARM_IP" >> $GITHUB_ENV
+          echo "SWARM_USER=$SWARM_USER" >> $GITHUB_ENV
+      - name: Deploy
+        run: bash ./deploy/deploy.sh ${{env.SWARM_IP}} ${{env.SWARM_USER}} ${{secrets.SSH_PRIVATE_KEY}}
