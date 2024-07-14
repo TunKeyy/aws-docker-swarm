@@ -39,3 +39,14 @@ jobs:
         with:
           name: swarm_info
           path: ./swarm_info.txt
+      - name: Download Artifact file
+        uses: actions/download-artifact@v3
+        with:
+          name: swarm_info
+          path: .
+      - name: Echo Downloaded File
+        run: |
+          SWARM_INFO=$(cat ./swarm-info.txt)
+          IFS=',' read -ra ADDR <<< "$SWARM_INFO"
+          SWARM_IP=${ADDR[0]}
+          SWARM_USER=${ADDR[1]}
