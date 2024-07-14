@@ -93,7 +93,7 @@ jobs:
           echo "swarm_ip=$SWARM_IP" >> "$GITHUB_OUTPUT"
 
   join-swarm:
-    needs: init_swarm
+    needs: [apply_terraform,init_swarm]
     runs-on: ubuntu-latest
     steps:
       - name: Add SSH Keys
