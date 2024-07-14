@@ -9,6 +9,7 @@ echo "/-\|/-\|/-\|/-\|/-\|/-\|/-\|"
 
 mkdir -p ~/.ssh/id_rsa
 echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa
 
 # Copy Docker configuration to Node manager
 scp -i ~/.ssh/id_rsa ./deploy/$DEPLOY_FILE $SWARM_USER@$SWARM_IP:/home/ubuntu
