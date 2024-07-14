@@ -31,4 +31,17 @@ jobs:
           echo "SWARM_IP=$SWARM_IP" >> $GITHUB_ENV
           echo "SWARM_USER=$SWARM_USER" >> $GITHUB_ENV
       - name: Deploy
-        run: bash ./deploy/deploy.sh ${{env.SWARM_IP}} ${{env.SWARM_USER}} "${{secrets.SSH_PRIVATE_KEY}}"
+        run: |
+          SWARM_IP=${{env.SWARM_IP}}
+          SWARM_USER=${{env.SWARM_USER}}
+          SSH_PRIVATE_KEY="${{secrets.SSH_PRIVATE_KEY}}"
+          DEPLOY_FILE=docker-compose.yml
+          STACK_NAME=t1
+          echo "/-\|/-\|/-\|/-\|/-\|/-\|/-\|"
+          echo $SSH_PRIVATE_KEY
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          scp -i ~/.ssh/id_rsa ./deploy/$DEPLOY_FILE $SWARM_USER@$SWARM_IP:/home/ubuntu
+          ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SWARM_USER@$SWARM_IP "sudo docker stack deploy -c /home/ubuntu/$DEPLOY_FILE $STACK_NAME"
+          echo "Deploy successfully"
