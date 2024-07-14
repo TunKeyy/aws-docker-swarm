@@ -13,6 +13,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: swarm_info
+          path: .
       - name: Read envs from CI
         id: read_swarm_info
         run: |
