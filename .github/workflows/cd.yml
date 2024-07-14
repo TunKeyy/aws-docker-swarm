@@ -34,14 +34,12 @@ jobs:
         run: |
           SWARM_IP=54.169.115.66
           SWARM_USER=ubuntu
-          SSH_PRIVATE_KEY="${{secrets.SSH_PRIVATE_KEY}}"
           DEPLOY_FILE=docker-compose.yml
           STACK_NAME=t1
           echo "/-\|/-\|/-\|/-\|/-\|/-\|/-\|"
-          echo $SSH_PRIVATE_KEY
           mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+          echo "${{secrets.SSH_PRIVATE_KEY}}" >> ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          scp -i ~/.ssh/id_rsa ./deploy/$DEPLOY_FILE $SWARM_USER@$SWARM_IP:/home/ubuntu
-          ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SWARM_USER@$SWARM_IP "sudo docker stack deploy -c /home/ubuntu/$DEPLOY_FILE $STACK_NAME"
+          scp -i ~/.ssh/id_rsa ./deploy/docker-compose.yml ubuntu@$SWARM_IP:/home/ubuntu
+          ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$SWARM_IP "sudo docker stack deploy -c /home/ubuntu/docker-compose.yml t1"
           echo "Deploy successfully"
