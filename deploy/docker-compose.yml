@@ -100,5 +100,5 @@ volumes:
     name: v2
     driver_opts:
       type: cifs
-      device: //13.212.35.217/data/
+      device: //SWARM_IP/data/
       o: username=smbuser,password=1234567,file_mode=0777,dir_mode=0777,vers=3.0,sec=ntlmssp
