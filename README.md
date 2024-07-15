@@ -16,54 +16,6 @@ export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
 Create VPC (Virtual Private Cloud) for 2 machines
 Create Subnet, Security Group
 
-Add Inbound Rules for Docker Swarm:
-
-2377 (TCP) for cluster management communications:
-
-Type: Custom TCP Rule
-Port Range: 2377
-Source: 0.0.0.0/0 (or a more restricted CIDR if you prefer)
-Description: Docker Swarm Management Port
-7946 (TCP/UDP) for communication among nodes:
-
-Type: Custom TCP Rule
-
-Port Range: 7946
-
-Source: 0.0.0.0/0
-
-Description: Docker Swarm Node Communication (TCP)
-
-Type: Custom UDP Rule
-
-Port Range: 7946
-
-Source: 0.0.0.0/0
-
-Description: Docker Swarm Node Communication (UDP)
-
-4789 (UDP) for overlay network traffic:
-
-Type: Custom UDP Rule
-Port Range: 4789
-Source: 0.0.0.0/0
-Description: Docker Swarm Overlay Network
-Add Inbound Rule for ICMP (Ping):
-
-Type: All ICMP - IPv4
-Protocol: ICMP
-Port Range: N/A
-Source: 0.0.0.0/0 (or the CIDR range of your VPC for more security)
-Description: Allow ICMP Ping
-Here are the steps to add these rules via AWS Management Console:
-
-Go to the EC2 Dashboard.
-Select "Security Groups" under "Network & Security".
-Select the security group used by your EC2 instances.
-Click on the "Inbound rules" tab and then "Edit inbound rules".
-Add the rules as described above.
-Save the rules.
-
 # Docker Swarm
 
 On Node manager:
