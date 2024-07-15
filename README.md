@@ -1,5 +1,13 @@
-# aws-docker-swarm
-Using terraform to create a cluster including 2 instances as 2 nodes
+# AWS DOCKER SWARM
+## Used Technologies
+- Simple NodeJS and PHP Service
+- NGINX
+- SAMBA Storage
+- Terraform
+- GitHub Actions
+- AWS EC2, VPS, S3 Bucket
+- Docker Swarm
+
 Main Flow:
 ![image](https://github.com/user-attachments/assets/d6e6b0b8-f46b-4ed5-b08e-171d422d594f)
 
@@ -106,7 +114,7 @@ Create shared volume
 ```
 docker volume create --driver local --name v2 --opt type=cifs --opt device=//54.255.208.228/data/ --opt o="username=smbuser,password=1234567,file_mode=0777,dir_mode=0777"
 ```
-
+Create a docker service manually
 ```
 docker service create --name service2 --network net2 -p 8085:8085 --mount type=volume,source=vol2,target=/d2 --replicas 5   --limit-cpu 0.5   --limit-memory 150M --reserve-cpu 0.25  --reserve-memory 50M   --restart-condition on-failure khanguyentuan/swarmtest:node
 ```
