@@ -1,6 +1,30 @@
 version: "3.7"
 
 services:
+  traefik:
+    image: traefik:v3.1
+    command:
+      - --docker
+      - --docker.swarmMode
+      - --docker.exposedByDefault=false
+      - --docker.watch
+      - --docker.domain=traefik.lc
+    ports:
+      - 80:80
+    networks:
+      - reverse-proxy-net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      placement:
+        constraints:
+          - node.role==manager
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=reverse-proxy-net"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=Host:traefik.lc"
+
   samba:
     image: khanguyentuan/samba
     ports:
@@ -85,6 +109,9 @@ networks:
   net2:
     driver: overlay
     name: www-net2
+  reverse-proxy-net:
+    driver: overlay
+    name: reverse-proxy-net
 
 volumes:
   vol1: # local volume
